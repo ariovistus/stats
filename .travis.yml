@@ -1,16 +1,15 @@
 language: minimal
-services: 
-  - docker
+services:
+- docker
 script:
-  - sudo bash prepare-tests.sh
-  - sudo bash run-tests.sh
-  - sudo bash build-docker.sh
-deploy: 
+- sudo bash prepare-tests.sh
+- sudo bash run-tests.sh
+- sudo bash build-docker.sh
+deploy:
   provider: s3
-  # travis-rock-deployer
-  access_key_id: AKIAITCXLO3P634Q6U7A
+  access_key_id: AKIAWKSOQNTFFN47LVWY
   secret_access_key:
-    secure: "ssYG4pSm/WznXgU0TUmMW7a+6w8+wxSJXxS1pcv/tpA9O/F8ksaPZhJhpVvRs+RxMQCmE3y8mw+shTSyktZxK7SGH6oBhemVL1ZfTf8o9L9uMLwKDmR0YkyZwPKs6qRZpC1HtfWGKT6H5Ms+irbDuzrHS1cJCaQGXrCQHuB0YqkpcrNs985YIq6RFZ/DW+EfI5ghltk528oHXdbo1DmVyhcBGIFcAOkAgsOcLxK1t+YFbFoWmAhCsI+LFME+3X3NwMdrR5HhHio6sc7QAMDFpZZ1ft2Kw8RIX2LB/VVGq8RD1YYH06874LGnj3zkZwpLWKbg5W8MVENhRV4fFdQJ80dF807pFGRevaxDj7Qn+ISBRetxZs/KwY9G2Fsayyt6N2DaBxXmWZZtacVsOrHHQBB6LxQiAZMKLCP4navDsZdISt906uuJqN0xIRJuApm03ZC8liYUITHmQFX6vlsrFPmmuiEsi0hClIWtoqynTkcUQaAr39AqIWeFQ19/TDCzHpna1MqZ2UlqogAWr9yKs7aQ8kd3WNrSTq5+MmhJmks3y9FP7VlJcSubmQu4R3QjaX42J3TtIWxfGDbEsiljUahDoU5ltKJhGCbnALyg9BqMZs9ZyFSomeSi6eJVQJzG9gZQ1esQLnO0w0Jb3c8sjJTdzVqKyXsmPeEsjiE32uA="
+    secure: MOGJq1UC7UnpLaT5HXKidTLAey1GjxkkBXJOxkftQ8h2Qx+wkCUNTXQAqhTu+OpWHj77SqX7oGcZN7YEShTC5Pgpx0DiUvpiJwPK3F7SYDGqPvexbXKUZefNfMfr5Y3Xg0GG5V+DlPUNxoGPgJgq0LJ3C7iPGCILMu5fZxvzv1trLrVE3jOBMU49He4O1iDtMPWituAqnVjGmvw1Z+K3cCMdjP0fVeaayCMdixoSeTon38FZug5ayw2p38jPZ7MjNJtzS0/ZSpifEk519ZY2WSD72DXZoFUbEbUfsyMK66mSoOwyn1HtvMlZ0OPheHSAjH/rgq3dtpGJjPDivtrzt2tyhl8mExeciVFZJeXiCJ4YoQCfo0Jqyn1LyLHlSdIZnKrV8JOggDU5DxnFI8Q//bf/YgZ9/QzRE5nLwxWCIhKj1Brs7efiL42+aph+54wu3gB6z7S2t+VE8DdVVZkJCzdHKEvcBuHA9KAx6UHOoKBbzOHYBdIayA3wGZdb0qkGNSUA9Gp3ddeLWlbwRpdGsx7Z5YF/yHvmQAK2930lhqHpZlfTLkymty2oo96P+7VD7r3bZ6jKhh07ZBRbV/ceE2BEh2VYt0hNX4zMKS7H5XLuV5u7nP3TFyy1LL3sSPjez5Xkvl3UtiB90rdJMTDyVxwFY7AT+4f4NFbciIDrvQQ=
   bucket: aws-website-stage-rpfg4
   upload-dir: stats
   local_dir: dist
@@ -18,4 +17,3 @@ deploy:
   region: us-east-1
   on:
     branch: master
-  
