@@ -12,7 +12,7 @@
 
 #was_a_table {
   display: grid;
-  grid-template-columns: 60px repeat(30, auto);
+  grid-template-columns: 60px repeat(25, auto);
   height: 500px;
   overflow-y: auto;
 }
@@ -69,6 +69,12 @@
   border-right: 1px solid #dee2e6;
   text-align: center;
 }
+.grouped-header-4 {
+  grid-column: span 4;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  text-align: center;
+}
 
 .grouped-header-5 {
   grid-column: span 5;
@@ -79,6 +85,13 @@
 
 .grouped-header-6 {
   grid-column: span 6;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  text-align: center;
+}
+
+.grouped-header-7 {
+  grid-column: span 7;
   border-left: 1px solid #dee2e6;
   border-right: 1px solid #dee2e6;
   text-align: center;

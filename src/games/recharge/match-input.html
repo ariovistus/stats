@@ -1,12 +1,10 @@
 <template>
   <!--page formating-->
   <require from="../../utilities/counter"></require>
-  <require from="../../utilities/time-remaining"></require>
   <require from="./match-input.css"></require>
   <require from="aurelia-validation/validate-binding-behavior"></require>
   <div class='container-fluid' show.bind='!errorNotScheduled'>
     <!--Team name and Event display-->
-    <button class='btn btn-outline-primary float-right' click.delegate='showSettings()'>Settings</button>
     <h1>
       <b>
         <u>
@@ -46,11 +44,6 @@
         </div>
       </div>
     </div>
-    <div class='row'>
-      <div class='col'>
-        <button class='btn btn-outline-primary' click.delegate='showBingo()'>Bingo</button>
-      </div>
-    </div>
 
     <div class="Pop-Ups">
       <span show.bind="hasSaved != false">Saved</span>
@@ -59,6 +52,153 @@
 
     <br>
 
+    <h1>Auto</h1>
+    <div class='row'>
+      <div class='col-sm-6'>
+            <label>
+              <input type='checkbox' checked.bind='model.autoCrossedLine' /> Left the starting line
+            </label>
+      </div>
+      <div class='col-sm-6 form-group'>
+            <counter display="High goals" model.bind='model' property="autoHighGoal" rules.bind="rules"></counter>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-sm-6 form-group'>
+            <counter display="Low goals" model.bind='model' property="autoLowGoal" rules.bind="rules"></counter>
+      </div>
+      <div class='col-sm-6 form-group'>
+            <counter display="High inner goals" model.bind='model' property="autoHighInnerGoal" rules.bind="rules"></counter>
+      </div>
+    </div>
+
+    <hr/>
+    <h1>Teleop</h1>
+    <div class='row'>
+      <div class='col-sm-6'>
+
+      </div>
+      <div class='col-sm-6 form-group'>
+            <counter display="High goals" model.bind='model' property="teleopHighGoal" rules.bind="rules"></counter>
+
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-sm-6 form-group'>
+            <counter display="Low goals" model.bind='model' property="teleopLowGoal" rules.bind="rules"></counter>
+
+      </div>
+      <div class='col-sm-6 form-group'>
+            <counter display="High inner goals" model.bind='model' property="teleopHighInnerGoal" rules.bind="rules"></counter>
+
+      </div>
+    </div>
+
+    <div id='control_panel' class='row' style='padding-top: 10px;'>
+      <div class='col-sm-6'>
+        <div class='row'>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.controlPanelRotationAttempted' /> Control Panel Rotation Attempted
+            </label>
+          </div>
+          <div class='col' show.bind='model.controlPanelRotationAttempted'>
+            <div class='col form-group'>
+              <label>Seconds Left When Started</label>
+              <input type='text' class='form-control' value.bind='model.controlPanelRotationBegin & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>Seconds Left When Finished</label>
+              <input type='text' class='form-control' value.bind='model.controlPanelRotationEnd & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>
+                <input type='checkbox' class='' checked.bind='model.controlPanelRotationSucceeded & validate:rules'>  Rotation task Succeeded
+              </label>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='col-sm-6'>
+        <div class='row'>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.controlPanelPositionAttempted' /> Control Panel Position Attempted
+            </label>
+          </div>
+          <div class='col' show.bind='model.controlPanelPositionAttempted'>
+            <div class='col form-group'>
+              <label>Seconds Left When Started</label>
+              <input type='text' class='form-control' value.bind='model.controlPanelPositionBegin & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>Seconds Left When Finished</label>
+              <input type='text' class='form-control' value.bind='model.controlPanelPositionEnd & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>
+                <input type='checkbox' class='' checked.bind='model.controlPanelPositionSucceeded & validate:rules'>  Position task Succeeded
+              </label>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <hr/>
+    <h1>End Game</h1>
+    <!--Climbing by yourself-->
+    <div id='climbing' class='row'>
+      <div class='col-sm-6'>
+        <div class='row'>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.climbAttempted' /> Climb Attempted
+            </label>
+          </div>
+          <div class='col' show.bind='model.climbAttempted'>
+            <div class='col form-group'>
+              <label>Seconds Left When Started</label>
+              <input type='text' class='form-control' value.bind='model.climbBegin & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>Seconds Left When Finished</label>
+              <input type='text' class='form-control' value.bind='model.climbEnd & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>
+                <input type='checkbox' class='' checked.bind='model.climbSucceeded & validate:rules'>  Climb Succeeded
+              </label>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Lifting-->
+    <div id='lifting' show.bind="!mehWereNotPicking">
+      <div class='row'>
+        <!--Lifted other teams-->
+        <div class='col-sm-7'>
+          <label>
+            <input type='checkbox' class='' change.delegate='syncLiftedAndEntries()' checked.bind='model.liftedSomeone'> Lifted Another Team</label>
+        </div>
+        <!--What teams they lifted-->
+        <div class='col-sm-7 form-group' show.bind='model.liftedSomeone'>
+          <label>
+            Lifted ${partner1}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
+          </label>
+          <label>
+            Lifted ${partner2}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
+          </label>
+          <input type='hidden' value.one-way='model.lifted & validate:rules' />
+        </div>
+      </div>
+    </div>
     <!--Drop down menus for stuff-->
     <h3 show.bind="!mehWereNotPicking">Intake Capabilities (Floor)</h3>
     <div class='row' show.bind="!mehWereNotPicking">
@@ -91,57 +231,6 @@
       </div>
     </div>
 
-    <h3>End Game</h3>
-    <!--Climbing by yourself-->
-    <div id='climbing' class='row'>
-      <div class='col-sm-6'>
-        <div class='row'>
-          <div class='col'>
-            <label>
-              <input type='checkbox' checked.bind='model.climbAttempted'>Climb Attempted</label>
-            </label>
-          </div>
-          <div class='col' show.bind='model.climbAttempted'>
-            <div class='col form-group'>
-              <label>Seconds Left When Started</label>
-              <input type='text' class='form-control' value.bind='model.climbBegin & validate:rules' />
-            </div>
-            <div class='col form-group'>
-              <label>Seconds Left When Finished</label>
-              <input type='text' class='form-control' value.bind='model.climbEnd & validate:rules' />
-            </div>
-            <div class='col form-group'>
-              <label>
-                <input type='checkbox' class='' checked.bind='model.climbSucceeded & validate:rules'>  Climb Succeeded
-              </label>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--Lifting-->
-    <div id='lifting' show.bind="!mehWereNotPicking">
-      <div class='row'>
-        <!--Lifted other teams-->
-        <div class='col-sm-7'>
-          <label>
-            <input type='checkbox' class='' change.delegate='syncLiftedAndEntries()' checked.bind='model.liftedSomeone'>Lifted Another Team</label>
-        </div>
-        <!--What teams they lifted-->
-        <div class='col-sm-7 form-group' show.bind='model.liftedSomeone'>
-          <label>
-            Lifted ${partner1}
-            <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
-          </label>
-          <label>
-            Lifted ${partner2}
-            <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
-          </label>
-          <input type='hidden' value.one-way='model.lifted & validate:rules' />
-        </div>
-      </div>
-    </div>
 
 
     <!--Fouls-->

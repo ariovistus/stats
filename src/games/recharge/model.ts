@@ -1,7 +1,7 @@
 import { IEventJson, IMergeState } from "..";
 import { TeamMatch2020Entity, matches2020AreEqual, make2020match} from "../../persistence";
 import { ValidationRules } from "aurelia-validation";
-import { DeepSpaceTeamStatistics } from "./statistics";
+import { RechargeTeamStatistics } from "./statistics";
 
 export interface DeepSpaceEventJson extends IEventJson {
   matches2020: TeamMatch2020Entity[];
@@ -55,6 +55,50 @@ export class Match2020MergeState implements IMergeState {
 export function setupValidationRules() {
   /* istanbul ignore next */
   let rules = ValidationRules
+    .ensure((obj: TeamMatch2020Entity) => obj.autoHighGoal)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.autoHighInnerGoal)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.autoLowGoal)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.teleopHighGoal)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.teleopHighInnerGoal)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.teleopLowGoal)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.controlPanelRotationBegin)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.controlPanelRotationEnd)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .satisfiesRule("isParadox", "controlPanelRotationBegin")
+    .when((obj:TeamMatch2020Entity) => obj.controlPanelRotationAttempted)
+    .ensure((obj: TeamMatch2020Entity) => obj.controlPanelPositionBegin)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .ensure((obj: TeamMatch2020Entity) => obj.controlPanelPositionEnd)
+    .satisfiesRule("minimum", 0)
+    .satisfiesRule("maximum", 135)
+    .satisfiesRule("isNumeric")
+    .satisfiesRule("isParadox", "controlPanelPositionBegin")
+    .when((obj:TeamMatch2020Entity) => obj.controlPanelPositionAttempted)
     .ensure((obj: TeamMatch2020Entity) => obj.climbBegin)
     .satisfiesRule("minimum", 0)
     .satisfiesRule("maximum", 135)
@@ -94,5 +138,5 @@ export function doPrint(val: boolean) {
 
 export interface MatchAndStats {
   match: TeamMatch2020Entity;
-  stats: DeepSpaceTeamStatistics;
+  stats: RechargeTeamStatistics;
 }

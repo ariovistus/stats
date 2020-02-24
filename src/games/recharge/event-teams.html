@@ -26,14 +26,11 @@
           <div class="head side" style="z-index: 9999999999;"></div>
           <div class="head"></div>
           <div class="head"></div>
-          <div id='floorPickup' class='grouped-header-2 head'>Floor pickup</div>
-          <div id='gamepieceCount' class='grouped-header-6 head border-left border-right'>Gamepiece Counts</div>
-          <div id='cargoCycle' class='grouped-header-5 head'>Cargo Cycle Times</div>
-          <div id='hatchCycle' class='grouped-header-5 head'>Hatch Panel Cycle Times</div>
+          <div id='Scores' class='grouped-header-4 head'>Scores</div>
+          <div id='Power Cells' class='grouped-header-7 head'> Power Cells</div>
+          <div id='Power Cells' class='grouped-header-4 head'> Control Panel</div>
           <div id='climb' class='grouped-header-3 head'>Climbs</div>
-          <div id='lift' class='grouped-header-2 head'>Lifts</div>
-          <div class="head"></div>
-          <div class="head"></div>
+          <div id='floorPickup' class='grouped-header-2 head'>Floor pickup</div>
           <div class="head"></div>
           <div class="head"></div>
           <div class="head"></div>
@@ -42,31 +39,36 @@
           <div class="clickable head side"  style="z-index: 9999999999;" click.delegate="sortByTeamNumber()">Team #</div>
           <div class="column-medium head">Team Name</div>
           <div class="column-small head">Scouted Match Count</div>
+          <!-- scores -->
+          <div class="column-medium clickable head grid-border-left" click.delegate="sortByAvgTotalScore()">Avg Total Score</div>
+          <div class="column-medium clickable head grid-border-left" click.delegate="sortByMaxTotalScore()">Max Total Score</div>
+          <div class="column-medium clickable head grid-border-left" click.delegate="sortByAvgGamepieceScore()">Avg PC Score</div>
+          <div class="column-medium clickable head grid-border-left" click.delegate="sortByMaxGamepieceScore()">Max PC Score</div>
+
+          <!-- power cells -->
+          <div class="column-medium clickable head grid-border-left" click.delegate="sortByCount()">Avg PC Count</div>
+          <div class="column-medium clickable head" click.delegate="sortByMaxCount()">Max PC Count</div>
+          <div class="column-medium clickable head" click.delegate="sortByAutoCount()">Avg Auto</div>
+          <div class="column-medium clickable head" click.delegate="sortByMaxAutoCount()">Max Auto</div>
+          <div class="column-medium clickable head" click.delegate="sortByAvgLow()">Avg Low</div>
+          <div class="column-medium clickable head" click.delegate="sortByAvgHigh()">Avg High</div>
+          <div class="column-medium clickable head" click.delegate="sortByAvgHighInner()">Avg High Inner</div>
+
+          <!-- control panel-->
+          <div class="column-small clickable head" click.delegate="sortByRotations()">Rotations</div>
+          <div class="column-small clickable head grid-border-right" click.delegate="sortByRotationTime()">Time</div>
+          <div class="column-small clickable head" click.delegate="sortByRotations()">Positions</div>
+          <div class="column-small clickable head grid-border-right" click.delegate="sortByPositionTime()">Time</div>
+
+          <!-- climb -->
+          <div class="column-small clickable head" click.delegate="sortByClimb()">Climbs</div>
+          <div class="column-small clickable head grid-border-right" click.delegate="sortByClimbTime()">Time</div>
+          <div class="column-small clickable head grid-border-right" click.delegate="sortByLift()">Lifts</div>
+
+          <!-- pickup -->
           <div class="column-medium clickable head grid-border-left" click.delegate="sortByCargoPickup()">Cargo Pickup</div>
           <div class="column-medium clickable head grid-border-right" click.delegate="sortByHatchPickup()">Hatch Pickup</div>
-          <div class="column-medium clickable head grid-border-left" click.delegate="sortByCount()">Avg Gamepiece Count</div>
-          <div class="column-medium clickable head" click.delegate="sortByMaxCount()">Max Gamepiece Count</div>
-          <div class="column-medium clickable head" click.delegate="sortByCargoCount()">Avg Cargo Count</div>
-          <div class="column-medium clickable head" click.delegate="sortByHatchCount()">Avg Hatch Count</div>
-          <div class="column-medium clickable head" click.delegate="sortByCargoCountSandstorm()">Avg Cargo Sandstorm</div>
-          <div class="column-medium clickable head grid-border-right" click.delegate="sortByHatchCountSandstorm()">Avg Hatch Sandstorm</div>
-          <div class="column-small clickable head grid-border-left" click.delegate="sortByCargoCycle()">Total</div>
-          <div class="column-small clickable head" click.delegate="sortByCargoCycleShip()">Cargo Ship</div>
-          <div class="column-small clickable head" click.delegate="sortByCargoCycleLow()">Rocket Low</div>
-          <div class="column-small clickable head" click.delegate="sortByCargoCycleMid()">Rocket Mid</div>
-          <div class="column-small clickable head grid-border-right" click.delegate="sortByCargoCycleHigh()">Rocket High</div>
-          <div class="column-small clickable head grid-border-left" click.delegate="sortByHatchCycle()">Total</div>
-          <div class="column-small clickable head" click.delegate="sortByHatchCycleShip()">Cargo Ship</div>
-          <div class="column-small clickable head" click.delegate="sortByHatchCycleLow()">Rocket Low </div>
-          <div class="column-small clickable head" click.delegate="sortByHatchCycleMid()">Rocket Mid </div>
-          <div class="column-small clickable head grid-border-right" click.delegate="sortByHatchCycleHigh()">Rocket High </div>
-          <div class="column-small clickable head grid-border-left" click.delegate="sortByLevel2Climb()">Level 2 climbs</div>
-          <div class="column-small clickable head" click.delegate="sortByLevel3Climb()">Level 3 climbs</div>
-          <div class="column-small clickable head grid-border-right" click.delegate="sortByClimbTime()">Level 3 Time</div>
-          <div class="column-small clickable head grid-border-left" click.delegate="sortByLevel2Lift()">Level 2</div>
-          <div class="column-small clickable head grid-border-right" click.delegate="sortByLevel3Lift()">Level 3</div>
-          <div class="column-medium head">% of Matches (Cargo)</div>
-          <div class="column-medium head">% of Matches (Hatch)</div>
+
           <div class="column-medium head">Defense Rating</div>
           <div class="column-small head">Foul Count</div>
           <div class="column-small head">Failure Count</div>
@@ -85,129 +87,86 @@
             <div>
               ${teamData.matchCount}
             </div>
+
+            <!-- scores -->
             <div class='grid-border-left'>
-              <span show.bind='!showDevStuff'>
-                ${teamData.cargoPickup.name}
-              </span>
-              <span show.bind='showDevStuff'>
-                ${teamData.cargoPickupRaw | numeric:"0.00"}/40
-              </span>
+                ${teamData.avgTotalScore | numeric:"0.0"}
+            </div>
+            <div class=''>
+                ${teamData.maxTotalScore | numeric:"0.0"}
+            </div>
+            <div class=''>
+                ${teamData.avgGamepieceScore | numeric:"0.0"}
             </div>
             <div class='grid-border-right'>
-              <span show.bind='!showDevStuff'>
-                ${teamData.hatchPanelPickup.name}
-              </span>
-              <span show.bind='showDevStuff'>
-                ${teamData.hatchPanelPickupRaw | numeric:"0.00"}/40
-              </span>
+                ${teamData.maxGamepieceScore | numeric:"0.0"}
             </div>
+
+            <!-- power cells -->
             <div class='grid-border-left'>
-              <span show.bind='!showDevStuff'>
-                    ${teamData.avgGamepieceCount | numeric:"0.0"}
-              </span>
-              <span show.bind='showDevStuff'>
-                ${teamData.cargoCountRaw + teamData.hatchPanelCountRaw}/${teamData.cargoPlacedMatchCount}
-              </span>
+                ${teamData.avgGamepieceCount | numeric:"0.0"}
             </div>
             <div class=''>
                 ${teamData.maxGamepieceCount | numeric:"0.0"}
             </div>
-            <div>
-              <span show.bind='!showDevStuff'>${teamData.avgCargoCount | numeric:"0.0"}</span><span
-                show.bind='showDevStuff'>${teamData.cargoCountRaw}/${teamData.cargoPlacedMatchCount}</span>
+            <div class=''>
+                ${teamData.avgGamepieceAutoCount | numeric:"0.0"}
             </div>
-            <div>
-              <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCount | numeric:"0.0"}</span><span
-                show.bind='showDevStuff'>${teamData.hatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount}</span>
+            <div class=''>
+                ${teamData.maxGamepieceAutoCount | numeric:"0.0"}
             </div>
-            <div>
-              <span show.bind='!showDevStuff'>${teamData.avgSandstormCargoCount | numeric:"0.0"}</span><span
-                show.bind='showDevStuff'>${teamData.sandstormCargoCountRaw}/${teamData.cargoPlacedMatchCount}</span>
+            <div class=''>
+                ${teamData.avgLowGoalCount | numeric:"0.0"}
+            </div>
+            <div class=''>
+                ${teamData.avgHighGoalCount | numeric:"0.0"}
             </div>
             <div class='grid-border-right'>
-              <span show.bind='!showDevStuff'>${teamData.avgSandstormHatchPanelCount | numeric:"0.0"}</span><span
-                show.bind='showDevStuff'>${teamData.sandstormHatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount}</span>
+                ${teamData.avgHighInnerGoalCount | numeric:"0.0"}
             </div>
+
+            <!-- control panel -->
             <div class='grid-border-left'>
-              <span show.bind='teamData.avgCargoCycleTime != noCycleTime'>
-                ${teamData.avgCargoCycleTime | numeric:"0.00"}
+              ${teamData.rotationSuccesses}/${teamData.rotationAttempts}
+            </div>
+            <div >
+              <span show.bind='teamData.rotationAvgTime != noClimbTime'>
+                ${teamData.rotationAvgTime | numeric:"0.00"}
               </span>
             </div>
-            <div>
-              <span show.bind='teamData.avgCargoCycleTimeCargoShip != noCycleTime'>
-                ${teamData.avgCargoCycleTimeCargoShip | numeric:"0.00"}
-              </span>
-            </div>
-            <div>
-              <span show.bind='teamData.avgCargoCycleTimeRocketLow != noCycleTime'>
-                    ${teamData.avgCargoCycleTimeRocketLow | numeric:"0.00"}
-              </span>
-            </div>
-            <div>
-              <span show.bind='teamData.avgCargoCycleTimeRocketMid != noCycleTime'>
-                    ${teamData.avgCargoCycleTimeRocketMid | numeric:"0.00"}
-              </span>
+            <div class=''>
+              ${teamData.positionSuccesses}/${teamData.positionAttempts}
             </div>
             <div class='grid-border-right'>
-              <span show.bind='teamData.avgCargoCycleTimeRocketHigh != noCycleTime'>
-                    ${teamData.avgCargoCycleTimeRocketHigh | numeric:"0.00"}
+              <span show.bind='teamData.positionAvgTime != noClimbTime'>
+                ${teamData.positionAvgTime | numeric:"0.00"}
               </span>
             </div>
+
+            <!-- climbs -->
             <div class='grid-border-left'>
-              <span show.bind='teamData.avgHatchPanelCycleTime != noCycleTime'>
-                ${teamData.avgHatchPanelCycleTime | numeric:"0.00"}
-              </span>
+              ${teamData.climbSuccesses}/${teamData.climbAttempts}
             </div>
             <div>
-              <span show.bind='teamData.avgHatchPanelCycleTimeCargoShip != noCycleTime'>
-                  ${teamData.avgHatchPanelCycleTimeCargoShip | numeric:"0.00"}
-              </span>
-              <span show.bind='showDevStuff'>
-                ${teamData.hatchPanelCycleTimeCargoShipRaw | numeric:"0.00"}/60
-              </span>
-            </div>
-            <div>
-              <span show.bind='teamData.avgHatchPanelCycleTimeRocketLow != noCycleTime'>
-                    ${teamData.avgHatchPanelCycleTimeRocketLow | numeric:"0.00"}
-              </span>
-            </div>
-            <div>
-              <span show.bind='teamData.avgHatchPanelCycleTimeRocketMid != noCycleTime'>
-                    ${teamData.avgHatchPanelCycleTimeRocketMid | numeric:"0.00"}
+              <span show.bind='teamData.avgClimbTime != noClimbTime'>
+              ${teamData.avgClimbTime | numeric:"0.00"}
               </span>
             </div>
             <div class='grid-border-right'>
-              <span show.bind='teamData.avgHatchPanelCycleTimeRocketHigh != noCycleTime'>
-                ${teamData.avgHatchPanelCycleTimeRocketHigh | numeric:"0.00"}
-              </span>
+              ${teamData.liftCount}
             </div>
-            <div class='grid-border-left'>
-              ${teamData.climbLevel2Successes}/${teamData.climbLevel2Attempts}
-            </div>
+
+            <!-- pickup -->
             <div>
-              ${teamData.climbLevel3Successes}/${teamData.climbLevel3Attempts}
-            </div>
-            <div class='grid-border-right'>
-              <span show.bind='teamData.avgClimbLevel3Time != noClimbTime'>
-              ${teamData.avgClimbLevel3Time | numeric:"0.00"}
-              </span>
-            </div>
-            <div class='grid-border-left'>
-              ${teamData.liftLevel2Count}
-            </div>
-            <div class='grid-border-right'>
-              ${teamData.liftLevel3Count}
-            </div>
-            <div>
-              ${teamData.cargoPlacedMatchCount}/${teamData.matchCount}
-            </div>
-            <div>
-              ${teamData.hatchPanelPlacedMatchCount}/${teamData.matchCount}
+              <span show.bind='!showDevStuff'>${teamData.gamepiecePickup.name}</span><span
+                show.bind='showDevStuff'>${teamData.drivetrainStrengthRaw | numeric: 0.0000}/40</span>
             </div>
             <div>
               <span show.bind='!showDevStuff'>${teamData.drivetrainStrength.name}</span><span
                 show.bind='showDevStuff'>${teamData.drivetrainStrengthRaw | numeric: 0.0000}/40</span>
             </div>
+
+            <div>???</div>
             <div>
               ${teamData.foulCount}
             </div>

@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import * as naturalSort from "javascript-natural-sort";
-import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
+import { ValidationController, ValidationControllerFactory } from "aurelia-validation";
 import { TeamMatch2020Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2020match, EventMatchSlots, qualitativeAnswers} from "../../persistence";
 import { Disposable, BindingEngine, DirtyCheckProperty } from "aurelia-binding";
 import { DialogService } from "aurelia-dialog";
@@ -12,7 +12,7 @@ import { DeepSpaceBingoDialog } from "./deepspace-bingo";
 import { QrCodeDisplayDialog } from "../../qrcodes/display-dialog";
 import { cloneDeep } from "lodash";
 import { nextMatchNumber, previousMatchNumber } from "../../model";
-import { setupValidationRules, placementTime } from "./model";
+import { setupValidationRules } from "./model";
 import { SaveDialog } from "../../utilities/save-dialog";
 import { equals } from "../../utilities/dirty-change-checker";
 import { SettingsDialog } from "./settings-dialog";
@@ -120,6 +120,16 @@ export class MatchInputPage {
         this.model.climbSucceeded = false;
       }
     }));
+  }
+
+  public syncLiftedAndEntries() {
+
+    this.liftedTemp = this.model.lifted;
+    this.model.lifted = [];
+    this.liftedPartner1 = false;
+    this.liftedPartner2 = false;
+
+    return true;
   }
 
   private unobserveFields() {
@@ -251,11 +261,13 @@ export class MatchInputPage {
   }
 
 
-  public validateAll() {
-    return(this.validationController.validate({
+  public async validateAll() {
+    let results = await (this.validationController.validate({
       object: this.model,
       rules: this.rules,
     }));
+    console.info(results);
+    return results;
 
   }
 

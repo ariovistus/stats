@@ -418,29 +418,49 @@ export var qualitativeAnswers : QualitativeAnswer[] = [
 
 export interface TeamMatch2020Entity extends IEventTeamMatch {
   id?: number;
+
   /**AUTONOMUS */
+
   /**Determines where  the robot will be starting on the field */
   startingPosition: string;
   /**Determines if a robot successfully got the lowest point value in auto */
   autoCrossedLine: boolean;
-  /*Determines where a robot shot a ball in auto */
+  /**Count of high outer goals robot scored in auto */
   autoHighGoal: number;
+  /**Count of high inner goals robot scored in auto */
   autoHighInnerGoal: number;
+  /**Count of low goals robot scored in auto */
   autoLowGoal: number;
   /**Determines if a robot did nothing the entire match */
   deadOnField: boolean;
   /**Determines if a robot spun out of control on the field */
   spinnyBois: boolean;
-  /**TELEOPERATED */
+  
+  /*TELEOPERATED */
+
+  /**Count of high outer goals robot scored in teleop */
+  teleopHighGoal: number;
+  /**Count of high inner goals robot scored in teleop */
+  teleopHighInnerGoal: number;
+  /**Count of low goals robot scored in teleop */
+  teleopLowGoal: number;
   powerCellPickup: QualitativeNumeric;
-  /**Determines if the control panel was attempted */
-  controlPanelAttempted: boolean;
-  /**Determines if the control panel attempt was successful */
-  controlPanelSucceeded: boolean;
-  /**Remaining number of seconds at the start of the control panel attempt */
-  controlPanelBegin: number;
-  /**Remaining number of seconds at the end of the control panel attempt */
-  controlPanelEnd: number;
+  /**Determines if the control panel rotation task was attempted */
+  controlPanelRotationAttempted: boolean;
+  /**Determines if the control panel rotation attempt was successful */
+  controlPanelRotationSucceeded: boolean;
+  /**Remaining number of seconds at the start of the control panel rotation attempt */
+  controlPanelRotationBegin: number;
+  /**Remaining number of seconds at the end of the control panel rotation attempt */
+  controlPanelRotationEnd: number;
+  /**Determines if the control panel position task was attempted */
+  controlPanelPositionAttempted: boolean;
+  /**Determines if the control panel position attempt was successful */
+  controlPanelPositionSucceeded: boolean;
+  /**Remaining number of seconds at the start of the control panel position attempt */
+  controlPanelPositionBegin: number;
+  /**Remaining number of seconds at the end of the control panel position attempt */
+  controlPanelPositionEnd: number;
   /**END GAME */
   /**Determines whether or not the robot attempted to climb*/
   climbAttempted: boolean;
@@ -453,8 +473,10 @@ export interface TeamMatch2020Entity extends IEventTeamMatch {
   /**Stores the team numbers of the robots lifted by this robot to the third level of the pedestal. */
   lifted: string[];
   liftedSomeone: boolean;
+
+  /**NOTES AND MISCELLANEOUS */
+  
   /**Determines whether or not a robot failure occurred. */
-  /**NOTES AND MESALANIOUS */
   isFailure: boolean;
   /**A more descriptive version of isFailure. */
   failureReason: string;
@@ -582,18 +604,25 @@ export function make2020match(eventCode: string, teamNumber: string, matchNumber
     autoLowGoal: 0,
 
     /**TELEOPERATED */
+    teleopHighGoal: 0,
+    teleopHighInnerGoal: 0,
+    teleopLowGoal: 0,
     deadOnField: false,
     spinnyBois: false,
     powerCellPickup: 0,
-    controlPanelAttempted: false,
-    controlPanelSucceeded: false,
-    controlPanelBegin: 0,
-    controlPanelEnd: 0,
+    controlPanelRotationAttempted: false,
+    controlPanelRotationSucceeded: false,
+    controlPanelRotationBegin: 135,
+    controlPanelRotationEnd: 0,
+    controlPanelPositionAttempted: false,
+    controlPanelPositionSucceeded: false,
+    controlPanelPositionBegin: 135,
+    controlPanelPositionEnd: 0,
 
     /**END GAME */
     climbAttempted: false,
     climbSucceeded: false,
-    climbBegin: 0,
+    climbBegin: 20,
     climbEnd: 0,
     lifted: [],
     liftedSomeone: false,
