@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
-import { FrcStatsContext, TeamEntity, EventTeamEntity, EventMatchSlots, TeamMatch2019Entity, EventMatchEntity, EventEntity, EventMatchSlot } from "../../persistence";
+import { FrcStatsContext, TeamEntity, EventMatchSlots, EventMatchEntity, EventEntity, EventMatchSlot } from "../../persistence";
 import * as naturalSort from "javascript-natural-sort";
-import { DeepSpaceTeamStatistics, makeTeamStats } from "./statistics";
+import { RechargeTeamStatistics, makeTeamStats } from "./statistics";
 import { MatchAndStats } from "./model";
 
 @autoinject
@@ -10,13 +10,14 @@ export class viewPage {
     public eventMatch: EventMatchEntity;
     public teams: {
         team: TeamEntity, slot: EventMatchSlot,
-        ms: MatchAndStats[], stats: DeepSpaceTeamStatistics
+        ms: MatchAndStats[], stats: RechargeTeamStatistics
     }[];
+
     constructor(private dbContext: FrcStatsContext) {
     }
+
     private async getEventTeams() {
       this.teams = []
-      let eventTeams = await this.dbContext.getEventTeams(this.event.year, this.event.eventCode);
       for(var i = 0; i < EventMatchSlots.length; i++) {
         let element = EventMatchSlots[i];
         let index = element.prop;
@@ -28,7 +29,7 @@ export class viewPage {
     }
     private async getTeamMatches() {
       for(var team of this.teams){
-        let matches = await this.dbContext.teamMatches2019
+        let matches = await this.dbContext.teamMatches2020
           .where(["eventCode", "teamNumber"])
           .equals([this.event.eventCode, team.team.teamNumber]).toArray();
         matches.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));

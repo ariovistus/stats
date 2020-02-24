@@ -19,45 +19,18 @@
         <table class="table table-hover">
           <tr>
             <th>Match Number</th>
-            <th>Placement Areas (Cargo)</th>
-            <th>Placement Areas (Hatch)</th>
-            <th>Placement Count (Cargo)</th>
-            <th>Placement Count (Hatch)</th>
-            <th>Cargo Pickup Rating</th>
-            <th>Hatch Pickup Rating</th>
-            <th>Highest Level Reached</th>
-            <th># of Teams Lifted</th>
+            <!-- stuff? -->
             <th>Notes</th>
           </tr>
           <tr repeat.for="m of matchStats">
             <td>
               <a style="display: block;"
-                route-href="route.bind:'match-team'; params.bind: {year: 2019, eventCode: m.match.eventCode, teamNumber: team.teamNumber, matchNumber: m.match.matchNumber}">
+                route-href="route.bind:'match-team'; params.bind: {year: 2020, eventCode: m.match.eventCode, teamNumber: team.teamNumber, matchNumber: m.match.matchNumber}">
                 ${m.match.matchNumber}
               </a>
             </td>
+            <!-- stuff? -->
             <td>
-              <span repeat.for="a of m.stats.locationsPlacedCargo" show.bind='isTrue'>
-                ${a}
-                <span show.bind="!$last"><br></span>
-              </span>
-            </td>
-            <td>
-              <span repeat.for="b of m.stats.locationsPlacedHatch" show.bind='isTrue'>
-                ${b}
-                <span show.bind="!$last"><br></span>
-              </span>
-            </td>
-            <td>${m.stats.avgCargoCount}</td>
-            <td>${m.stats.avgHatchPanelCount}</td>
-            <td>${m.stats.cargoPickup.name} </td>
-            <td>${m.stats.hatchPanelPickup.name}</td>
-            <td>${m.match.level3ClimbSucceeded ? 3 : (m.match.level2ClimbSucceeded*2) }</td>
-            <td>${m.match.lifted.length}</td>
-            <td>
-              <div show.bind="m.match.autoNotes">
-                ${m.match.autoNotes}
-              </div>
               ${m.match.notes}
               <span show.bind="m.match.isFailure">
                 <br show.bind="m.match.notes" /><b>Fail:</b>

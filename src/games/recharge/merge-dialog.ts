@@ -2,35 +2,54 @@ import { autoinject } from "aurelia-framework";
 import { DialogController, DialogService } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
-import { Match2019MergeState, MergeDialogModel, setupValidationRules, makePlacementMergeStates, PlacementMergeState } from "./model";
+import { Match2020MergeState, MergeDialogModel, setupValidationRules } from "./model";
 import { allDeepSpaceGamepieceTypes, allDeepSpaceLocations, DeepSpaceEventType } from "../../persistence";
 
 @autoinject
-export class Match2019MergeDialog {
-  state: Match2019MergeState;
+export class Match2020MergeDialog {
+  state: Match2020MergeState;
   private validationController: ValidationController;
   private renderer: BootstrapRenderer;
   public rules: any[];
-  public placementRules: any[];
   public errorMessage: string;
-  public placementMergeStates : PlacementMergeState[];
-  public gamepieces = allDeepSpaceGamepieceTypes;
-  public locations = allDeepSpaceLocations;
-  public gamepiecePlacement : DeepSpaceEventType = "Gamepiece Placement";
 
   public static properties = [
-    "cargoPickup", "hatchPanelPickup",
-    "isFailure", "failureReason", "isFoul", "foulReason",
-    "level2ClimbAttempted", "level2ClimbSucceeded",
-    "level3ClimbAttempted", "level3ClimbSucceeded",
-    "level3ClimbBegin", "level3ClimbEnd",
-    "lifted",
-    "liftedBy",
-    "notes",
-  ];
+    "startingPosition",
+    "autoCrossedLine",
+    "autoHighGoal",
+    "autoHighInnerGoal",
+    "autoLowGoal",
 
-  public static placementProperties = [
-    "gamepiece", "location", "when", "sandstorm",
+    /**TELEOPERATED */
+    "teleopHighGoal",
+    "teleopHighInnerGoal",
+    "teleopLowGoal",
+    //"deadOnField",
+    //"spinnyBois",
+    "powerCellPickup",
+    "controlPanelRotationAttempted",
+    "controlPanelRotationSucceeded",
+    "controlPanelRotationBegin",
+    "controlPanelRotationEnd",
+    "controlPanelPositionAttempted",
+    "controlPanelPositionSucceeded",
+    "controlPanelPositionBegin",
+    "controlPanelPositionEnd",
+
+    /**END GAME */
+    "climbAttempted",
+    "climbSucceeded",
+    "climbBegin",
+    "climbEnd",
+    "lifted",
+    "liftedSomeone",
+    "isFailure",
+    "failureReason",
+    "isFoul",
+    "foulReason",
+    "notes",
+    "defenseCapability",
+    "defenseWeaknesses",
   ];
 
   constructor (
@@ -45,15 +64,10 @@ export class Match2019MergeDialog {
     this.controller.settings.lock = false;
     this.controller.settings.overlayDismiss = true;
 
-    for (var prop of Match2019MergeDialog.properties) {
+    for (var prop of Match2020MergeDialog.properties) {
       if(this.state.localSaved[prop] == this.state.fromFile[prop]) {
         this.state.merged[prop] = this.state.localSaved[prop];
       }
-    }
-
-    this.placementMergeStates = makePlacementMergeStates(this.state.fromFile, this.state.localSaved);
-    for (var state of this.placementMergeStates) {
-      state.setSameFields();
     }
 
     this.setupValidation();
@@ -66,7 +80,6 @@ export class Match2019MergeDialog {
   private setupValidation() {
     let allRules = setupValidationRules();
     this.rules = allRules.rules;
-    this.placementRules = allRules.placementRules;
 
     this.renderer = new BootstrapRenderer({showMessages: true});
     this.validationController.addRenderer(this.renderer);
@@ -93,42 +106,29 @@ export class Match2019MergeDialog {
   }
 
   public takeAllFromDb() {
-    for (var prop of Match2019MergeDialog.properties) {
+    for (var prop of Match2020MergeDialog.properties) {
       this.state.merged[prop] = this.state.localSaved[prop];
     }
   }
 
   public takeAllFromFile() {
-    for (var prop of Match2019MergeDialog.properties) {
+    for (var prop of Match2020MergeDialog.properties) {
       this.state.merged[prop] = this.state.fromFile[prop];
     }
   }
 
-  public validateAll() {
-    let validationPromises = this.state.merged.placements.map(placement => {
-      return this.validationController.validate({
-        object: placement,
-        rules: this.placementRules
-      });
-    });
-    validationPromises.push(this.validationController.validate({
+  public async validateAll() {
+    let results = await this.validationController.validate({
       object: this.state.merged,
       rules: this.rules,
-    }));
+    });
 
-    return Promise.all(validationPromises);
+    return results;
   }
 
   public async resolve() {
-    this.state.merged.placements = [];
-    for(var state of this.placementMergeStates) {
-      if(state.include) {
-        this.state.merged.placements.push(state.merged);
-      }
-    }
-
-    let results = await this.validateAll();
-      if(results.every(result => result.valid)) {
+    let result = await this.validateAll();
+      if(result.valid) {
         this.state.resolved = true;
         this.controller.ok();
       }
@@ -139,30 +139,7 @@ export class Match2019MergeDialog {
   }
 
 
-  public takeLocalPlacement(p: PlacementMergeState) {
-    if(p.localSaved == null) {
-      p.include = false;
-    }else{
-      p.include = true;
-      for(var prop of Match2019MergeDialog.placementProperties) {
-        p.merged[prop] = p.localSaved[prop];
-      }
-    }
-  }
-
-  public takeFilePlacement(p: PlacementMergeState) {
-    if(p.fromFile == null) {
-      p.include = false;
-    }else{
-      p.include = true;
-      for(var prop of Match2019MergeDialog.placementProperties) {
-        p.merged[prop] = p.fromFile[prop];
-      }
-    }
-
-  }
-
   public static open(dialogService: DialogService, model: MergeDialogModel) {
-    return dialogService.open({model: model, viewModel: Match2019MergeDialog});
+    return dialogService.open({model: model, viewModel: Match2020MergeDialog});
   }
 }

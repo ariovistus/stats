@@ -7,7 +7,7 @@ import { validateEventTeamMatches, getTeamNumbers } from "../merge-utils";
 import { FrcStatsContext, EventMatchEntity, IEventTeamMatch, TeamMatch2020Entity, EventEntity } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
 import { Match2020MergeState } from "./model";
-import { Match2019MergeDialog as Match2020MergeDialog } from "./merge-dialog";
+import { Match2020MergeDialog } from "./merge-dialog";
 
 export interface DeepSpaceEventJson extends IEventJson{
   matches2020: TeamMatch2020Entity[]

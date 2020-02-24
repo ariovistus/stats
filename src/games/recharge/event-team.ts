@@ -1,11 +1,11 @@
 import { autoinject } from "aurelia-framework";
 import * as naturalSort from "javascript-natural-sort";
-import { DeepSpaceTeamStatistics, makeTeamStats } from "./statistics"
+import { RechargeTeamStatistics, makeTeamStats } from "./statistics"
 
 import {
   TeamEntity, FrcStatsContext,
   EventMatchEntity, EventTeamEntity, EventEntity,
-  TeamMatch2019Entity,
+  TeamMatch2020Entity,
   EventMatchSlots
 } from "../../persistence";
 import { MatchAndStats } from "./model";
@@ -15,7 +15,7 @@ export class EventTeam {
   public team: TeamEntity;
   public eventTeam: EventTeamEntity;
   public event: EventEntity;
-  public matches2019: TeamMatch2019Entity[];
+  public matches2020: TeamMatch2020Entity[];
   public eventMatches: EventMatchEntity[];
   public activeTab: number = 0;
   public matchTotal: number = 0;
@@ -24,7 +24,7 @@ export class EventTeam {
   public matchStats: MatchAndStats[];
 
   constructor(private dbContext: FrcStatsContext) {
-    this.matches2019 = [];
+    this.matches2020 = [];
     this.isTrue = true;
   }
 
@@ -43,12 +43,12 @@ export class EventTeam {
 
   getStats() {
     this.matchStats = [];
-    this.matchStats.length = this.matches2019.length;
+    this.matchStats.length = this.matches2020.length;
     for(var i = 0; i < this.matchStats.length; i++) {
       this.matchStats[i] = {
-        match: this.matches2019[i],
+        match: this.matches2020[i],
         stats: makeTeamStats(this.team, [
-          this.matches2019[i]
+          this.matches2020[i]
         ])
       };
     }
@@ -76,11 +76,11 @@ export class EventTeam {
   }
 
   async getMatchData() {
-    if (this.eventTeam.year == "2019") {
-      this.matches2019 = await this.dbContext.teamMatches2019
+    if (this.eventTeam.year == "2020") {
+      this.matches2020 = await this.dbContext.teamMatches2020
         .where(["eventCode", "teamNumber"])
         .equals([this.eventTeam.eventCode, this.eventTeam.teamNumber]).toArray();
-      this.matches2019.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
+      this.matches2020.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
     }
   }
 }
