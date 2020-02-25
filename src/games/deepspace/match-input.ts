@@ -17,6 +17,7 @@ import { SaveDialog } from "../../utilities/save-dialog";
 import { equals } from "../../utilities/dirty-change-checker";
 import { SettingsDialog } from "./settings-dialog";
 import { TimeRemaining } from "../../utilities/time-remaining";
+import { gotoMatch } from "../../event-matches/match-navigation";
 
 @autoinject
 export class MatchInputPage {
@@ -62,6 +63,7 @@ export class MatchInputPage {
   private renderer: BootstrapRenderer;
   private observers: Disposable[];
   public mehWereNotPicking = false;
+  public numTeamsPlaying = 0;
 
   constructor(
     private bindingEngine: BindingEngine,
@@ -158,6 +160,7 @@ export class MatchInputPage {
     this.team = await this.dbContext.getTeam(params.teamNumber)
     this.event = await this.dbContext.getEvent(params.year, params.eventCode);
     this.eventMatch = await this.dbContext.getEventMatch(params.year, params.eventCode, params.matchNumber);
+    this.setTeamsPlaying();
     this.slots = EventMatchSlots.filter(slot =>
       this.eventMatch[slot.prop] == this.model.teamNumber
     )[0];
@@ -240,6 +243,19 @@ export class MatchInputPage {
     QrCodeDisplayDialog.open(this.dialogService,
       { data: this.prepareQrCodeData() },
     )
+  }
+
+  public setTeamsPlaying() {
+    if(this.event.scoutingMode == "smes") {
+      let teams = this.event.smes.get(this.event.selectedSME);
+      this.numTeamsPlaying = 0;
+      for(var slot of EventMatchSlots) {
+        let teamNumber = this.eventMatch[slot.prop];
+        if(teams.some(x => x == teamNumber)) {
+          this.numTeamsPlaying ++;
+        }
+      }
+    }
   }
 
   public prepareQrCodeData() {
@@ -526,19 +542,13 @@ export class MatchInputPage {
 
   }   
   public async gotoMatch(matchNumber: string) {
-    let eventCode = this.model.eventCode;
-    let year = this.event.year;
-    let slot = EventMatchSlots.filter(slot =>
-      this.eventMatch[slot.prop] == this.model.teamNumber
-    )[0];
-    let nextEventMatch = await this.dbContext.getEventMatch(this.event.year, this.event.eventCode, matchNumber);
-    let teamNumber = nextEventMatch[slot.prop];
-
-    this.router.navigateToRoute("match-team", {
-      year: year,
-      eventCode: eventCode,
-      teamNumber: teamNumber,
-      matchNumber: matchNumber,
+    await gotoMatch({
+      router: this.router,
+      currentTeamNumber: this.model.teamNumber,
+      dbContext: this.dbContext,
+      event: this.event,
+      eventMatch: this.eventMatch,
+      matchNumber: matchNumber
     });
   }
 

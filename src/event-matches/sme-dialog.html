@@ -1,0 +1,36 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+    </ux-dialog-header>
+    <ux-dialog-body>
+
+      <h3>SME assignments</h3>
+      <div class='row' repeat.for="eventTeam of eventTeams">
+        <div class='col'>
+          ${eventTeam.teamNumber}
+        </div>
+        <div class='col'>
+          <select class='form-control' value.bind="eventTeam.sme" change.delegate='smeChanged()'>
+            <option repeat.for="sme of allSMEs" model.bind="sme">
+              ${sme}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <h3>SME assignment counts</h3>
+      <table class='table'>
+        <tbody>
+          <tr repeat.for='sme of allSMEs'>
+            <td>${sme}</td>
+            <td>${smeCounts.get(sme)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button class='btn btn-primary' click.delegate='save()'>Save</button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

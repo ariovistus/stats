@@ -15,6 +15,7 @@
         </u>
       </b>
     </h1>
+    <p show.bind="numTeamsPlaying > 1">${numTeamsPlaying} of your teams are playing in this match</p>
     <h3>
       <b>
         <a route-href='route: event-matches; params.bind: {year: event.year,

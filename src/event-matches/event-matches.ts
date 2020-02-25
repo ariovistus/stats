@@ -5,9 +5,11 @@ import {
   EventEntity, FrcStatsContext, EventTeamEntity, 
   TeamEntity, EventMatchEntity, IEventTeamMatch } from "../persistence";
 import { MatchDialog } from "./match-dialog";
+import { ModeDialog } from "./mode-dialog";
 import { ConfirmDialog } from "./confirm-dialog";
 import { EventTeamData, MatchData } from "../model";
 import { gameManager } from "../games/index";
+import { SMEListDialog } from "./sme-list-dialog";
 
 @autoinject
 export class EventMatches {
@@ -19,6 +21,7 @@ export class EventMatches {
   public teamsData: EventTeamData[];
   public gameName: string;
   public beesechurger: boolean;
+  public scoutingTeams: Set<string>;
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -30,19 +33,17 @@ export class EventMatches {
     this.activeTab = 0;
   }
    
-  activate(params) {
+  async activate(params) {
     let game = gameManager.getGame(params.year);
     this.gameName = game.name;
     this.beesechurger = game.eventMatchModule != null;
 
-    return this.getEvent(params).then(() => {
-      return Promise.all([
-        this.getEventMatches(), 
-        this.getEventTeams(),
-      ]);
-    }).then(() => {
-      this.getEventTeamMatches(params.year);
-    });
+    await this.getEvent(params);
+    await Promise.all([
+      this.getEventMatches(),
+      this.getEventTeams(),
+    ]);
+    await this.getEventTeamMatches(params.year);
   }
   
   add()
@@ -76,41 +77,38 @@ export class EventMatches {
     });
   }
 
-  getEvent(params) {
-	  return this.dbContext.getEvent(params.year, params.eventCode).then(event => {
-		  this.event = event;
+  async getEvent(params) {
+    this.event = await this.dbContext.getEvent(params.year, params.eventCode);
+    
+    this.scoutingTeams = new Set();
+    if(this.event.smes != null && this.event.smes.get(this.event.selectedSME) != null) {
+      let teams = this.event.smes.get(this.event.selectedSME);
+      for(var team2 of teams) {
+        this.scoutingTeams.add(team2)
+      }
+    }
+  }
+
+  async getEventTeams() {
+    let eventTeams = await this.dbContext.getEventTeams(this.event.year, this.event.eventCode);
+    var gettingTeams = eventTeams.map(async eventTeam => {
+      let team = await this.dbContext.teams.where("teamNumber").equals(eventTeam.teamNumber).first();
+      this.teams.push({ team: team, eventTeam: eventTeam });
     });
+
+    await Promise.all(gettingTeams);
+    this.teams.sort((a, b) => naturalSort(a.team.teamNumber, b.team.teamNumber));
   }
 
-  getEventTeams() {
-	  return this.dbContext.eventTeams.where(["year", "eventCode"]).equals([this.event.year, this.event.eventCode]).toArray().then(eventTeams => {
-		  var gettingTeams = eventTeams.map(eventTeam =>{
-        return this.dbContext.teams.where("teamNumber").equals(eventTeam.teamNumber)
-          .first().then(team => {
-            this.teams.push({team: team, eventTeam: eventTeam});
-          });
-      });
-
-      return Promise.all(gettingTeams).then(() => {
-        this.teams.sort((a,b) => naturalSort(a.team.teamNumber, b.team.teamNumber));
-      });
-    });
+  async getEventMatches() {
+    this.eventMatches = await this.dbContext.getEventMatches(this.event.year, this.event.eventCode);
+    this.eventMatches.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
+    await this.getEventTeamMatches(this.event.year);
   }
 
-  getEventMatches(){
-    return this.dbContext.getEventMatches(this.event.year, this.event.eventCode).then(eventMatches => {
-      this.eventMatches = eventMatches;
-      this.eventMatches.sort((a,b) => naturalSort(a.matchNumber, b.matchNumber));
-     }).then(() => {
-       this.getEventTeamMatches(this.event.year);
-     });
-  }
-
-  getEventTeamMatches(year: string) {
+  async getEventTeamMatches(year: string) {
     let game = gameManager.getGame(year);
-    return game.getEventTeamMatches(this.event.eventCode).then(matches => {
-      this.eventTeamMatches = matches;
-    });
+    this.eventTeamMatches = await game.getEventTeamMatches(this.event.eventCode);
   }
 
   remove(eventMatch){
@@ -138,5 +136,19 @@ export class EventMatches {
       match.teamNumber == teamNumber).length != 0;
 
     return result;
+  }
+
+  public smeScouts(eventMatch: EventMatchEntity, teamNumber: string) {
+    return this.scoutingTeams.has(teamNumber);
+  }
+
+  public editMode() {
+    ModeDialog.open(this.dialogService, this.event).whenClosed(async () => {
+      await this.getEvent({year: this.event.year, eventCode: this.event.eventCode});
+    });
+  }
+
+  public showSMEList() {
+    SMEListDialog.open(this.dialogService, this.event);
   }
 }

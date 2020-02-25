@@ -3,7 +3,9 @@
   <require from="aurelia-bootstrap/tabs/aubs-tabset"></require>
 
   <div class='container-fluid'>
+    <button class='btn btn-outline-primary float-right' click.delegate='editMode()'>Mode</button>
     <h1> ${event.name} * ${gameName} * ${event.calendarYear}</h1>
+    <p show.bind="event.scoutingMode == 'smes'">You are SME ${event.selectedSME}. <button class='btn btn-outline-secondary' click.delegate="showSMEList()">Teams you are scouting</button></p>
 
     <!--<p> Maybe make a tab for match schedule, and make a tab for team list? </p>-->
     <ul class='nav nav-tabs'>
@@ -29,7 +31,7 @@
           <th>Red Alliance (1)</th>
           <th>Red Alliance (2)</th>
           <th>Red Alliance (3)</th>
-          <th class="options-header">Options</th>  
+          <th class="options-header" show.bind="event.scheduleEditable">Options</th>  
         </tr>
         <tr repeat.for="eventMatch of eventMatches">
            <td class="">
@@ -40,42 +42,42 @@
               ${eventMatch.matchNumber}
               </span>
             </td>
-          <td class="${scouted(eventMatch, eventMatch.blue1) ? 'blue' : ''}">
+          <td class="${scouted(eventMatch, eventMatch.blue1) ? 'blue' : ''} ${smeScouts(eventMatch, eventMatch.blue1) ? 'border border-primary' : ''}">
             <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.blue1, matchNumber: eventMatch.matchNumber}">
               ${eventMatch.blue1}
             </a>
           </td>
-          <td class="${scouted(eventMatch, eventMatch.blue2) ? 'blue' : ''}">
+          <td class="${scouted(eventMatch, eventMatch.blue2) ? 'blue' : ''} ${smeScouts(eventMatch, eventMatch.blue2) ? 'border border-primary' : ''}">
             <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.blue2, matchNumber: eventMatch.matchNumber}">
               ${eventMatch.blue2}
             </a>
           </td>
-          <td class="${scouted(eventMatch, eventMatch.blue3) ? 'blue' : ''}">
+          <td class="${scouted(eventMatch, eventMatch.blue3) ? 'blue' : ''} ${smeScouts(eventMatch, eventMatch.blue3) ? 'border border-primary' : ''}">
             <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.blue3, matchNumber: eventMatch.matchNumber}">
               ${eventMatch.blue3}
             </a>
           </td>
-          <td class="${scouted(eventMatch, eventMatch.red1) ? 'red' : ''}">
+          <td class="${scouted(eventMatch, eventMatch.red1) ? 'red' : ''} ${smeScouts(eventMatch, eventMatch.red1) ? 'border border-danger' : ''}">
             <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.red1, matchNumber: eventMatch.matchNumber}">
               ${eventMatch.red1}
             </a>
           </td>
-          <td class="${scouted(eventMatch, eventMatch.red2) ? 'red' : ''}">
+          <td class="${scouted(eventMatch, eventMatch.red2) ? 'red' : ''}  ${smeScouts(eventMatch, eventMatch.red2) ? 'border border-danger' : ''}">
             <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.red2, matchNumber: eventMatch.matchNumber}">
               ${eventMatch.red2}
             </a>
           </td>
-          <td class="${scouted(eventMatch, eventMatch.red3) ? 'red' : ''}">
+          <td class="${scouted(eventMatch, eventMatch.red3) ? 'red' : ''} ${smeScouts(eventMatch, eventMatch.red2) ? 'border border-danger' : ''}">
             <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.red3, matchNumber: eventMatch.matchNumber}">
               ${eventMatch.red3}
             </a>
           </td>
-          <td class="options-item">
+          <td class="options-item" show.bind="event.scheduleEditable">
             <button class='btn btn-hover btn-primary' click.delegate="edit(eventMatch)">Edit</button>
             <button class='btn btn-hover btn-danger' click.delegate="remove(eventMatch)">Remove</button>
           </td>
         </tr>
-        <tr>
+        <tr show.bind="event.scheduleEditable">
           <td></td>
           <td></td>
           <td></td>

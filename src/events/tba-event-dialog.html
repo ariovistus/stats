@@ -6,9 +6,6 @@
 
       <label>year</label>
       <select class='form-control' value.bind="year" change.delegate='yearChanged()'>
-        <!-- <option value.bind="'2019'">2019</option>
-        <option value.bind="'2018'">2018</option>
-        <option value.bind="'2017'">2017</option> -->
         <option repeat.for="y of years" model.bind="y">${y}</option>
         
       </select>

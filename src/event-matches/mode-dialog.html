@@ -1,0 +1,46 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <label>
+        <input type='checkbox' value.bind="event.scheduleEditable" />
+        Schedule editable
+      </label>
+
+      <hr/>
+      <h3>Scouting Mode</h3>
+      <label>
+        <input type='radio' name='scouting_mode' checked.bind='event.scoutingMode' model.bind='SWIMLANES' />
+        Swimlanes
+      </label>
+      <br/>
+      <label>
+        <input type='radio' name='scouting_mode' checked.bind='event.scoutingMode' model.bind='SMES'/>
+        SMEs
+      </label>
+      <div>
+        <span show.bind="event.scoutingMode == SMES && event.smes == null">
+        SME schedule must be defined
+        </span>
+        <button show.bind="event.scoutingMode == SMES" 
+          class='btn btn-outline-primary float-right' click.delegate='editSMEs()'>Edit SMEs</button>
+
+      </div>
+      <div show.bind="event.scoutingMode == SMES && event.smes != null">
+        <label>SME:</label>
+        <select class='form-control' value.bind="event.selectedSME">
+          <option repeat.for="sme of allSMEs" model.bind="sme">
+            ${sme}
+          </option>
+        </select>
+      </div>
+
+
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button type='button' class='btn btn-primary' disabled.bind="event.scoutingMode == SMES && event.smes == null" click.delegate="save()">Save</button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>
+

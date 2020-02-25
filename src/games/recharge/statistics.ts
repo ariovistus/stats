@@ -55,6 +55,7 @@ export class RechargeTeamStatistics {
   positionAttempts: number;
   positionSuccesses: number;
   positionAvgTime: number;
+  crossedLineCount: number;
   /**The number of matches where a team placed at least one cargo. */
   gamepiecePlacedMatchCount: number;
   /**The number of matches a team has played. */
@@ -134,6 +135,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2020Entity[]): Recha
   result.climbAttempts = 0;
   result.rotationAttempts = 0;
   result.positionAttempts = 0;
+  result.crossedLineCount = 0;
 
   result.teamNumber = team.teamNumber;
   result.teamName = team.teamName;
@@ -155,6 +157,11 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2020Entity[]): Recha
     let highGoal = +(x[i].teleopHighGoal || 0);
     let highInnerGoal = +(x[i].teleopHighInnerGoal || 0);
 
+    let crossedLine = x[i].autoCrossedLine;
+    if(crossedLine) {
+      result.crossedLineCount ++;
+    }
+
 
     function setMax(value, prop) {
       if(value > result[prop]) {
@@ -165,7 +172,11 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2020Entity[]): Recha
     let score = calculateScore(autoLowGoal, autoHighGoal, autoHighInnerGoal, lowGoal, highGoal, highInnerGoal);
     setMax(score, 'maxGamepieceScore');
 
-    let totalScore = score + (x[i].climbSucceeded ? 25 : 0) + (x[i].controlPanelRotationSucceeded ? 10 : 0) + (x[i].controlPanelPositionSucceeded ? 20 : 0);
+    let totalScore = (score + 
+      (x[i].climbSucceeded ? 25 : 0) + 
+      (x[i].controlPanelRotationSucceeded ? 10 : 0) + 
+      (x[i].controlPanelPositionSucceeded ? 20 : 0) + 
+      (crossedLine ? 5 : 0));
     setMax(totalScore, 'maxTotalScore');
 
     let total = autoLowGoal + autoHighGoal + autoHighInnerGoal + lowGoal + highGoal + highInnerGoal;
@@ -273,7 +284,12 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2020Entity[]): Recha
     result.avgHighGoalCount = (result.autoHighGoalCount + result.teleopHighGoalCount) / result.matchesPlayed;
     result.avgHighInnerGoalCount = (result.autoHighInnerGoalCount + result.teleopHighInnerGoalCount) / result.matchesPlayed;
 
-    result.avgTotalScore = (gamepieceScoreSum + result.climbSuccesses * 25 + result.rotationSuccesses * 10 + result.positionSuccesses * 20) / result.matchesPlayed;
+    result.avgTotalScore = (
+        gamepieceScoreSum + 
+        result.climbSuccesses * 25 + 
+        result.rotationSuccesses * 10 + 
+        result.positionSuccesses * 20 + 
+        result.crossedLineCount * 5) / result.matchesPlayed;
 
     function sanityCheck(prop) {
       if (isNaN(result[prop])) {

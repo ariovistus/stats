@@ -875,6 +875,10 @@ export interface EventEntity {
   calendarYear: string;
 
   tbaKey?: string;
+  scheduleEditable?: boolean;
+  scoutingMode?: "smes" | "swimlanes";
+  smes?: Map<string, string[]>;
+  selectedSME?: string;
 }
 
 export interface GameEntity {

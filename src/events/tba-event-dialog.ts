@@ -6,7 +6,7 @@ import { gameManager, IGame } from "../games/index";
 
 @autoinject
 export class TbaEventDialog {
-  year = "2019";
+  year = "2018";
   chosenGame: IGame;
   customEventKey = "";
   customIsLoading = false;
@@ -26,11 +26,14 @@ export class TbaEventDialog {
     this.controller.settings.overlayDismiss = true;
     
     this.games = gameManager.getGames();
-    this.yearChanged();
     this.years = [];
     this.games[0].gameCode;
     this.years = this.games.map(function(x){return(x.gameCode)});
     this.years.sort();
+    if(this.years.length != 0) {
+      this.year = this.years[this.years.length - 1];
+    }
+    this.yearChanged();
 
     this.load();
   }
