@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { DialogController, DialogService } from "aurelia-dialog";
 import { BindingEngine, Disposable } from "aurelia-binding";
 import * as naturalSort from "javascript-natural-sort";
-import { debounce } from "lodash";
+import { debounce, cloneDeep } from "lodash";
 import { PickerResultDoc } from "gapi_module";
 import { FrcStatsContext, EventMatchEntity, TeamMatch2018Entity, EventEntity, EventTeamEntity, TeamMatch2019Entity } from "../persistence";
 import { GoogleDriveApi, FileExistsOutput } from "../google-apis";
@@ -182,6 +182,10 @@ export class ExportDialog {
     let game = gameManager.getGame(this.event.year);
 
     game.exportEventJson(this.event).then(json => {
+      json = cloneDeep(json);
+      if(json.event.smes) {
+        json.event.smes = <any>mapToJsonable(json.event.smes);
+      }
       this.downloadJson(this.event, json);
     });
     
@@ -288,4 +292,12 @@ export class ExportDialog {
       URL.revokeObjectURL(url);
     }, 0);
   }
+}
+
+function mapToJsonable(map: Map<any, any>) {
+  let result = {};
+  for(var key of map.keys()) {
+    result[key] = map.get(key);
+  }
+  return result;
 }

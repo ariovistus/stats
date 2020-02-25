@@ -114,6 +114,9 @@ export class JsonImportDialog {
 
   private postReadJsonFixups() {
       this.clearIds();
+      if(this.json.event.smes != null) {
+        this.json.event.smes = jsonableToMap(this.json.event.smes);
+      }
 
       this.dbContext.events.where(["year", "eventCode"]).equals([this.json.event.year, this.json.event.eventCode]).first().then(localEvent => {
         if(localEvent == null) {
@@ -415,4 +418,13 @@ export class JsonImportDialog {
     });
 
   }
+}
+
+function jsonableToMap(obj: any) {
+  let map = new Map();
+  for (var key of Object.keys(obj)) {
+    map.set(key, obj[key]);
+
+  }
+  return map;
 }
